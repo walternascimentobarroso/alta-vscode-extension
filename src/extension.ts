@@ -1,26 +1,58 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+let myStatusBarItem: vscode.StatusBarItem;
+let itemSettings = vscode.workspace.getConfiguration("statusBarCustomItem");
+let colorSettings = vscode.workspace.getConfiguration("statusBarCustomColor");
+
 export function activate(context: vscode.ExtensionContext) {
+  myStatusBarItem = vscode.window.createStatusBarItem(
+    vscode.StatusBarAlignment.Left,
+    10000
+  );
+  context.subscriptions.push(myStatusBarItem);
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "altaenv" is now active!');
-
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('altaenv.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from AltaEnv!');
-	});
-
-	context.subscriptions.push(disposable);
+  updateStatusBar(context);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+function updateStatusBar(context: vscode.ExtensionContext): void {
+  let name = itemSettings.get("text") as string;
+  let icon = itemSettings.get("icon") as string;
+  let tooltip = itemSettings.get("tooltip") as string;
+
+  let primaryBk = colorSettings.get("primaryBkColor") as string;
+  let secondaryBk = colorSettings.get("secondaryBkColor") as string;
+  let foreground = colorSettings.get("foregroundColor") as string;
+
+  myStatusBarItem.text = `${icon} ${name}`;
+  myStatusBarItem.tooltip = tooltip;
+  myStatusBarItem.show();
+
+  const workbenchConfiguration = vscode.workspace.getConfiguration("workbench");
+  const currentColorCustomizations: {
+    [index: string]: string;
+  } = workbenchConfiguration.get("colorCustomizations") ?? {};
+
+  const colorCustomizations = { ...currentColorCustomizations };
+
+  if (primaryBk !== undefined) {
+    colorCustomizations["statusBar.background"] = primaryBk;
+  }
+
+  if (secondaryBk !== undefined) {
+    colorCustomizations["statusBar.noFolderBackground"] = secondaryBk;
+    colorCustomizations["statusBar.debuggingBackground"] = secondaryBk;
+  }
+
+  if (foreground !== undefined) {
+    colorCustomizations["statusBar.foreground"] = foreground;
+    colorCustomizations["statusBar.debuggingForeground"] = foreground;
+  }
+
+  if (currentColorCustomizations !== colorCustomizations) {
+    workbenchConfiguration.update(
+      "colorCustomizations",
+      colorCustomizations,
+      true
+    );
+  }
+}

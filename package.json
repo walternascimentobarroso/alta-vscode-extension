@@ -1,24 +1,39 @@
 {
   "name": "altaenv",
   "displayName": "AltaEnv",
-  "description": "",
+  "description": "Personalize your Env with custom settings.",
+  "icon": "img/icon.png",
   "version": "0.0.1",
+  "publisher": "WalterNascimentoBarroso",
+  "author": {
+    "name": "Walter Nascimento Barroso",
+    "email": "WalterNascimentoBarroso@gmail.com"
+  },
   "engines": {
     "vscode": "^1.78.0"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/walternascimentobarroso/alta-vscode-extension",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/walternascimentobarroso/alta-vscode-extension.git"
   },
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "keywords": [
+    "statusbar",
+    "status",
+    "custom",
+    "item",
+    "personalize",
+    "customizer",
+    "personal"
+  ],
+  "activationEvents": [
+    "*"
+  ],
   "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "altaenv.helloWorld",
-        "title": "Hello World"
-      }
-    ]
-  },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
     "compile": "tsc -p ./",
@@ -39,5 +54,42 @@
     "mocha": "^10.2.0",
     "typescript": "^5.1.3",
     "@vscode/test-electron": "^2.3.2"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Status Bar Custom Item",
+      "properties": {
+        "statusBarCustomItem.text": {
+          "type": "string",
+          "default": "Alta",
+          "description": "Custom Item Text (can be your name)"
+        },
+        "statusBarCustomItem.tooltip": {
+          "type": "string",
+          "default": "This Visual Studio Code belongs to Alta",
+          "description": "Custom Item Tooltip Text"
+        },
+        "statusBarCustomItem.icon": {
+          "type": "string",
+          "default": "🔥",
+          "description": "Custom Item Icon"
+        },
+        "statusBarCustomColor.primaryBkColor": {
+          "type": "string",
+          "default": "#3ED7D7",
+          "description": "StatusBar background color"
+        },
+        "statusBarCustomColor.secondaryBkColor": {
+          "type": "string",
+          "default": "#3ED700",
+          "description": "StatusBar No Folder and Debugging background color"
+        },
+        "statusBarCustomColor.foregroundColor": {
+          "type": "string",
+          "default": "#ffffff",
+          "description": "Foreground (text) color"
+        }
+      }
+    }
   }
 }
